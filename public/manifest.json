@@ -1,11 +1,10 @@
 {
-  "name": "RaffleFlow",
-  "short_name": "RaffleFlow",
-  "description": "Create and manage raffles with ease.",
+  "name": "Sorteos",
+  "short_name": "Sorteos",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F3F0F7",
-  "theme_color": "#79558B",
+  "background_color": "#ffffff",
+  "theme_color": "#5DA67F",
   "icons": [
     {
       "src": "/icon.svg",
