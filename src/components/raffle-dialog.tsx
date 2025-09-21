@@ -107,7 +107,6 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
                     <Badge variant="secondary" className="text-lg bg-accent text-accent-foreground">{index + 1}</Badge>
                     <div className="flex-1">
                       <p className="font-semibold">{winner.name}</p>
-                      {winner.email && <p className="text-xs text-muted-foreground">{winner.email}</p>}
                     </div>
                   </CardContent>
                 </Card>

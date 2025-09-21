@@ -51,8 +51,6 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const phone = formData.get('phone') as string;
 
     if (!name.trim()) {
       toast({ title: "Error", description: "El nombre del participante es obligatorio.", variant: 'destructive' });
@@ -61,11 +59,11 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
 
     if (editingParticipant) {
       const updatedParticipants = list.participants.map(p =>
-        p.id === editingParticipant.id ? { ...p, name, email, phone } : p
+        p.id === editingParticipant.id ? { ...p, name } : p
       );
       updateList({ ...list, participants: updatedParticipants });
     } else {
-      const newParticipant: Participant = { id: `p-${Date.now()}`, name, email, phone };
+      const newParticipant: Participant = { id: `p-${Date.now()}`, name };
       updateList({ ...list, participants: [...list.participants, newParticipant] });
     }
     setIsParticipantDialogOpen(false);
@@ -147,8 +145,6 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
             <TableHeader className="sticky top-0 bg-card z-10">
               <TableRow>
                 <TableHead>Nombre</TableHead>
-                <TableHead className="hidden md:table-cell">Email</TableHead>
-                <TableHead className="hidden md:table-cell">Teléfono</TableHead>
                 <TableHead className="text-right w-12"></TableHead>
               </TableRow>
             </TableHeader>
@@ -158,12 +154,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
                   <TableRow key={p.id}>
                     <TableCell className="font-medium">
                       {p.name}
-                      <div className="md:hidden text-xs text-muted-foreground">
-                        {p.email}
-                      </div>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{p.email}</TableCell>
-                    <TableCell className="hidden md:table-cell">{p.phone}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -179,7 +170,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  <TableCell colSpan={2} className="h-24 text-center text-muted-foreground">
                     Aún no hay participantes. Añade uno para empezar.
                   </TableCell>
                 </TableRow>
@@ -199,14 +190,6 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">Nombre</Label>
                 <Input id="name" name="name" defaultValue={editingParticipant?.name} className="col-span-3" required />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="email" className="text-right">Email</Label>
-                <Input id="email" name="email" type="email" defaultValue={editingParticipant?.email} className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="phone" className="text-right">Teléfono</Label>
-                <Input id="phone" name="phone" defaultValue={editingParticipant?.phone} className="col-span-3" />
               </div>
             </div>
             <DialogFooter>

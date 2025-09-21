@@ -1,12 +1,9 @@
 import type { Participant } from './types';
 
 export function exportToCSV(participants: Participant[], listName: string) {
-  const headers = 'name,email,phone';
+  const headers = 'name';
   const rows = participants.map(p => {
-    const name = `"${p.name.replace(/"/g, '""')}"`;
-    const email = p.email ? `"${p.email.replace(/"/g, '""')}"` : '';
-    const phone = p.phone ? `"${p.phone.replace(/"/g, '""')}"` : '';
-    return `${name},${email},${phone}`;
+    return `"${p.name.replace(/"/g, '""')}"`;
   });
   const csvContent = `data:text/csv;charset=utf-8,${headers}\n${rows.join('\n')}`;
   
@@ -39,16 +36,11 @@ export function importFromCSV(file: File): Promise<Omit<Participant, 'id'>[]> {
           throw new Error('CSV must have a "name" column.');
         }
 
-        const emailIndex = headers.indexOf('email');
-        const phoneIndex = headers.indexOf('phone');
-
         const participants = lines.map(line => {
           if (!line.trim()) return null;
           const data = line.split(',');
           return {
             name: data[nameIndex]?.trim().replace(/^"|"$/g, '') || '',
-            email: emailIndex > -1 ? data[emailIndex]?.trim().replace(/^"|"$/g, '') : undefined,
-            phone: phoneIndex > -1 ? data[phoneIndex]?.trim().replace(/^"|"$/g, '') : undefined,
           };
         }).filter((p): p is Omit<Participant, 'id'> => p !== null && !!p.name);
         
