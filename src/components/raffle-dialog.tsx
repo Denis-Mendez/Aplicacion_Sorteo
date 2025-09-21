@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Ticket, Dices, RotateCw, UserCheck } from 'lucide-react';
 import type { RaffleList, RaffleResult, Participant } from '@/lib/types';
@@ -62,16 +62,27 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
     switch (state) {
       case 'drawing':
         return (
-          <div className="py-8 text-center">
-            <Dices className="mx-auto h-16 w-16 animate-spin text-primary" />
-            <p className="mt-4 text-lg font-medium">Seleccionando operario...</p>
-          </div>
+          <>
+            <DialogHeader>
+              <DialogTitle className="sr-only">Sorteo en curso</DialogTitle>
+              <DialogDescription className="sr-only">
+                La aplicación está seleccionando aleatoriamente un operario.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-8 text-center">
+              <Dices className="mx-auto h-16 w-16 animate-spin text-primary" />
+              <p className="mt-4 text-lg font-medium">Seleccionando operario...</p>
+            </div>
+          </>
         );
       case 'results':
         return (
           <div>
              <DialogHeader className="text-center mb-4">
                <DialogTitle className="text-2xl">Operario Seleccionado</DialogTitle>
+               <DialogDescription className="sr-only">
+                El operario seleccionado es {winner?.name}.
+               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-2 my-4">
               {winner && (
@@ -93,10 +104,18 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
       case 'idle':
       default:
          return (
-          <div className="py-8 text-center">
-            <Dices className="mx-auto h-16 w-16 text-primary" />
-            <p className="mt-4 text-lg font-medium">Preparando selección...</p>
-          </div>
+          <>
+            <DialogHeader>
+              <DialogTitle className="sr-only">Preparando sorteo</DialogTitle>
+              <DialogDescription className="sr-only">
+                El diálogo para el sorteo de operarios se está preparando.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-8 text-center">
+              <Dices className="mx-auto h-16 w-16 text-primary" />
+              <p className="mt-4 text-lg font-medium">Preparando selección...</p>
+            </div>
+          </>
         );
     }
   };
