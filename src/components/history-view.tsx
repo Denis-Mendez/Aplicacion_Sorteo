@@ -3,7 +3,7 @@
 import type { RaffleResult } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { History, Calendar, Trophy, Hash } from 'lucide-react';
+import { History, Calendar, Trophy } from 'lucide-react';
 
 interface HistoryViewProps {
   history: RaffleResult[];
@@ -22,31 +22,15 @@ export function HistoryView({ history }: HistoryViewProps) {
             {history.map(item => (
               <Card key={item.id}>
                 <CardHeader>
-                  <CardTitle className="text-accent">{item.listName}</CardTitle>
-                  <CardDescription className="flex items-center gap-2">
+                  <CardTitle className="text-accent flex items-center gap-2">
+                    <Trophy className="h-5 w-5" /> 
+                    {item.winners[0]?.name || 'Ganador desconocido'}
+                  </CardTitle>
+                  <CardDescription className="flex items-center gap-2 pt-2">
                     <Calendar className="h-4 w-4" />
-                    {new Date(item.date).toLocaleString()}
+                    <span>Sorteo de la lista "{item.listName}" el {new Date(item.date).toLocaleString()}</span>
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <h4 className="font-semibold mb-2">Ganadores</h4>
-                      <ul className="list-disc list-inside">
-                        {item.winners.map(winner => (
-                          <li key={winner.id} className="truncate">{winner.name}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Configuración</h4>
-                      <div className="space-y-1 text-muted-foreground">
-                        <p className="flex items-center gap-2"><Trophy className="h-4 w-4" />{item.settings.numberOfWinners} ganadores</p>
-                        {item.settings.seed && <p className="flex items-center gap-2 truncate"><Hash className="h-4 w-4" />Semilla: {item.settings.seed}</p>}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
               </Card>
             ))}
           </div>
