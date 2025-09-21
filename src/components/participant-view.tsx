@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreVertical, Trash2, Edit, UserPlus, Upload, Download, Ticket } from 'lucide-react';
+import { MoreVertical, Trash2, Edit, UserPlus, Upload, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { exportToCSV, importFromCSV } from '@/lib/csv';
 import { RaffleDialog } from './raffle-dialog';
@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { ScrollArea } from './ui/scroll-area';
 
 interface ParticipantViewProps {
   list: RaffleList;
@@ -54,7 +55,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
     const phone = formData.get('phone') as string;
 
     if (!name.trim()) {
-      toast({ title: "Error", description: "Participant name is required.", variant: 'destructive' });
+      toast({ title: "Error", description: "El nombre del participante es obligatorio.", variant: 'destructive' });
       return;
     }
 
@@ -88,23 +89,23 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
       const newParticipantsData = await importFromCSV(file);
       const newParticipants: Participant[] = newParticipantsData.map(p => ({ ...p, id: `p-${Date.now()}-${Math.random()}` }));
       updateList({ ...list, participants: [...list.participants, ...newParticipants] });
-      toast({ title: "Success", description: `${newParticipants.length} participants imported.` });
+      toast({ title: "Éxito", description: `${newParticipants.length} participantes importados.` });
     } catch (error) {
-      toast({ title: "Import Error", description: (error as Error).message, variant: 'destructive' });
+      toast({ title: "Error de Importación", description: (error as Error).message, variant: 'destructive' });
     }
     e.target.value = ''; // Reset file input
   };
   
   return (
-    <div className="p-6 md:p-8 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 pt-16 md:pt-8 md:p-8 h-full flex flex-col">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
         <Input
           value={listName}
           onChange={(e) => setListName(e.target.value)}
           onBlur={handleNameChange}
-          className="text-2xl font-bold border-0 shadow-none focus-visible:ring-0 p-0 h-auto"
+          className="text-2xl font-bold border-0 shadow-none focus-visible:ring-0 p-0 h-auto w-full md:w-auto"
         />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-end">
            <RaffleDialog list={list} addRaffleToHistory={addRaffleToHistory} />
            <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -112,42 +113,42 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the list
-                  "{list.name}" and all its participants.
+                  Esta acción no se puede deshacer. Esto eliminará permanentemente la lista
+                  "{list.name}" y todos sus participantes.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteList(list.id)}>Continue</AlertDialogAction>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={() => deleteList(list.id)}>Continuar</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-4">
         <Button onClick={() => openParticipantDialog(null)}>
-          <UserPlus className="mr-2 h-4 w-4" /> Add Participant
+          <UserPlus className="mr-2 h-4 w-4" /> Añadir Participante
         </Button>
         <input type="file" accept=".csv" ref={fileInputRef} onChange={handleImport} className="hidden" />
         <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-          <Upload className="mr-2 h-4 w-4" /> Import CSV
+          <Upload className="mr-2 h-4 w-4" /> Importar CSV
         </Button>
         <Button variant="outline" onClick={() => exportToCSV(list.participants, list.name)} disabled={list.participants.length === 0}>
-          <Download className="mr-2 h-4 w-4" /> Export CSV
+          <Download className="mr-2 h-4 w-4" /> Exportar CSV
         </Button>
       </div>
       
       <div className="border rounded-lg overflow-hidden flex-1">
         <ScrollArea className="h-full">
           <Table>
-            <TableHeader className="sticky top-0 bg-card">
+            <TableHeader className="sticky top-0 bg-card z-10">
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
+                <TableHead>Nombre</TableHead>
+                <TableHead className="hidden md:table-cell">Email</TableHead>
+                <TableHead className="hidden md:table-cell">Teléfono</TableHead>
                 <TableHead className="text-right w-12"></TableHead>
               </TableRow>
             </TableHeader>
@@ -155,17 +156,22 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
               {list.participants.length > 0 ? (
                 list.participants.map(p => (
                   <TableRow key={p.id}>
-                    <TableCell className="font-medium">{p.name}</TableCell>
-                    <TableCell>{p.email}</TableCell>
-                    <TableCell>{p.phone}</TableCell>
+                    <TableCell className="font-medium">
+                      {p.name}
+                      <div className="md:hidden text-xs text-muted-foreground">
+                        {p.email}
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">{p.email}</TableCell>
+                    <TableCell className="hidden md:table-cell">{p.phone}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="h-4 w-4" /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem onClick={() => openParticipantDialog(p)}><Edit className="mr-2 h-4 w-4" /> Edit</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => deleteParticipant(p.id)} className="text-red-500"><Trash2 className="mr-2 h-4 w-4" /> Delete</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => openParticipantDialog(p)}><Edit className="mr-2 h-4 w-4" /> Editar</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => deleteParticipant(p.id)} className="text-red-500"><Trash2 className="mr-2 h-4 w-4" /> Eliminar</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -174,7 +180,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                    No participants yet. Add one to get started.
+                    Aún no hay participantes. Añade uno para empezar.
                   </TableCell>
                 </TableRow>
               )}
@@ -186,12 +192,12 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
       <Dialog open={isParticipantDialogOpen} onOpenChange={setIsParticipantDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingParticipant ? 'Edit' : 'Add'} Participant</DialogTitle>
+            <DialogTitle>{editingParticipant ? 'Editar' : 'Añadir'} Participante</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSaveParticipant}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">Name</Label>
+                <Label htmlFor="name" className="text-right">Nombre</Label>
                 <Input id="name" name="name" defaultValue={editingParticipant?.name} className="col-span-3" required />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -199,15 +205,15 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
                 <Input id="email" name="email" type="email" defaultValue={editingParticipant?.email} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="phone" className="text-right">Phone</Label>
+                <Label htmlFor="phone" className="text-right">Teléfono</Label>
                 <Input id="phone" name="phone" defaultValue={editingParticipant?.phone} className="col-span-3" />
               </div>
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="button" variant="secondary">Cancel</Button>
+                <Button type="button" variant="secondary">Cancelar</Button>
               </DialogClose>
-              <Button type="submit">Save</Button>
+              <Button type="submit">Guardar</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -215,6 +221,3 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
     </div>
   );
 }
-
-// Dummy ScrollArea for type compatibility
-const ScrollArea = ({ className, children }: { className?: string; children: React.ReactNode }) => <div className={className}>{children}</div>

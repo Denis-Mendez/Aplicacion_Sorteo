@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
-import type { RaffleList, RaffleResult, Participant } from '@/lib/types';
+import type { RaffleList, RaffleResult } from '@/lib/types';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { ListsSidebar } from '@/components/lists-sidebar';
 import { ParticipantView } from '@/components/participant-view';
 import { HistoryView } from '@/components/history-view';
 import { EmptyState } from '@/components/empty-state';
-import { LayoutDashboard, Ticket, Users, History } from 'lucide-react';
+import { Ticket } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export function MainPage() {
@@ -20,7 +20,7 @@ export function MainPage() {
   const createList = () => {
     const newList: RaffleList = {
       id: `list-${Date.now()}`,
-      name: 'Untitled List',
+      name: 'Lista sin título',
       participants: [],
       createdAt: new Date().toISOString(),
     };
@@ -44,7 +44,7 @@ export function MainPage() {
   if (!listsInitialized || !historyInitialized) {
     return (
       <div className="flex h-screen bg-background">
-        <div className="w-64 border-r p-4">
+        <div className="w-64 border-r p-4 hidden md:block">
           <Skeleton className="h-8 w-3/4 mb-4" />
           <Skeleton className="h-6 w-full mb-2" />
           <Skeleton className="h-6 w-full mb-2" />
@@ -80,8 +80,8 @@ export function MainPage() {
         ) : (
           <EmptyState
             icon={<Ticket className="w-16 h-16 text-primary" />}
-            title="Welcome to RaffleFlow"
-            description="Select a list from the sidebar or create a new one to get started."
+            title="Bienvenido a Sorteos"
+            description="Selecciona una lista de la barra lateral o crea una nueva para comenzar."
           />
         )}
       </main>

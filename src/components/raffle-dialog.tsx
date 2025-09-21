@@ -39,8 +39,8 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
       const result = await getRaffleSuggestions(participantCount);
       setNumberOfWinners(result.suggestedWinnerCount);
       toast({
-        title: "AI Suggestion Applied",
-        description: `Suggested ${result.suggestedWinnerCount} winners. ${result.additionalNotes || ''}`,
+        title: "Sugerencia de IA aplicada",
+        description: `Se sugirieron ${result.suggestedWinnerCount} ganadores. ${result.additionalNotes || ''}`,
       });
     } catch (error) {
       toast({ title: "Error", description: (error as Error).message, variant: 'destructive' });
@@ -51,7 +51,7 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
 
   const handleRunRaffle = () => {
     if (numberOfWinners < 1 || numberOfWinners > participantCount) {
-      toast({ title: "Invalid Input", description: `Number of winners must be between 1 and ${participantCount}.`, variant: 'destructive' });
+      toast({ title: "Entrada inválida", description: `El número de ganadores debe estar entre 1 y ${participantCount}.`, variant: 'destructive' });
       return;
     }
     setState('drawing');
@@ -91,14 +91,14 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
         return (
           <div className="py-8 text-center">
             <Dices className="mx-auto h-16 w-16 animate-spin text-primary" />
-            <p className="mt-4 text-lg font-medium">Drawing winners...</p>
+            <p className="mt-4 text-lg font-medium">Eligiendo ganadores...</p>
           </div>
         );
       case 'results':
         return (
           <div>
              <DialogHeader className="text-center mb-4">
-               <DialogTitle className="text-2xl">🎉 Congratulations to the Winners! 🎉</DialogTitle>
+               <DialogTitle className="text-2xl">🎉 ¡Felicidades a los Ganadores! 🎉</DialogTitle>
             </DialogHeader>
             <div className="grid gap-2 my-4 max-h-64 overflow-y-auto pr-4">
               {winners.map((winner, index) => (
@@ -114,7 +114,7 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
               ))}
             </div>
             <DialogFooter>
-              <Button onClick={reset} variant="outline"><RotateCw className="mr-2 h-4 w-4" /> Run Again</Button>
+              <Button onClick={reset} variant="outline"><RotateCw className="mr-2 h-4 w-4" /> Realizar de nuevo</Button>
             </DialogFooter>
           </div>
         );
@@ -123,19 +123,19 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
         return (
           <div>
             <DialogHeader>
-              <DialogTitle>Run Raffle: {list.name}</DialogTitle>
+              <DialogTitle>Realizar Sorteo: {list.name}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">{participantCount} participants</p>
+                <p className="text-sm text-muted-foreground">{participantCount} participantes</p>
                 <Button variant="outline" size="sm" onClick={handleAISuggestions} disabled={isAISuggesting || participantCount === 0}>
                   <Wand2 className={cn("mr-2 h-4 w-4", isAISuggesting && "animate-spin")} />
-                  Get AI Suggestions
+                  Sugerencias IA
                 </Button>
               </div>
               <Separator />
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="winners" className="text-right">Winners</Label>
+                <Label htmlFor="winners" className="text-right">Ganadores</Label>
                 <Input
                   id="winners"
                   type="number"
@@ -147,10 +147,10 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="seed" className="text-right">Seed</Label>
+                <Label htmlFor="seed" className="text-right">Semilla</Label>
                 <Input
                   id="seed"
-                  placeholder="Optional for reproducible results"
+                  placeholder="Opcional para resultados reproducibles"
                   value={seed}
                   onChange={e => setSeed(e.target.value)}
                   className="col-span-3"
@@ -159,7 +159,7 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
             </div>
             <DialogFooter>
               <Button onClick={handleRunRaffle} disabled={participantCount === 0}>
-                <Trophy className="mr-2 h-4 w-4" /> Draw {numberOfWinners} {numberOfWinners > 1 ? 'Winners' : 'Winner'}
+                <Trophy className="mr-2 h-4 w-4" /> Elegir {numberOfWinners} {numberOfWinners > 1 ? 'Ganadores' : 'Ganador'}
               </Button>
             </DialogFooter>
           </div>
@@ -171,7 +171,7 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button disabled={participantCount === 0}>
-          <Ticket className="mr-2 h-4 w-4" /> Run Raffle
+          <Ticket className="mr-2 h-4 w-4" /> Realizar Sorteo
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
