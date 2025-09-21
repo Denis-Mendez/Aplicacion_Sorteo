@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Ticket, Dices, RotateCw } from 'lucide-react';
+import { Ticket, Dices, RotateCw, UserCheck } from 'lucide-react';
 import type { RaffleList, RaffleResult, Participant } from '@/lib/types';
 import { runRaffle } from '@/lib/raffle';
 import { Card, CardContent } from '@/components/ui/card';
@@ -64,20 +64,20 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
         return (
           <div className="py-8 text-center">
             <Dices className="mx-auto h-16 w-16 animate-spin text-primary" />
-            <p className="mt-4 text-lg font-medium">Eligiendo al ganador...</p>
+            <p className="mt-4 text-lg font-medium">Seleccionando operario...</p>
           </div>
         );
       case 'results':
         return (
           <div>
              <DialogHeader className="text-center mb-4">
-               <DialogTitle className="text-2xl">🎉 ¡Felicidades al Ganador! 🎉</DialogTitle>
+               <DialogTitle className="text-2xl">Operario Seleccionado</DialogTitle>
             </DialogHeader>
             <div className="grid gap-2 my-4">
               {winner && (
                 <Card className="animate-in fade-in-0 slide-in-from-bottom-5">
                   <CardContent className="p-3 flex items-center gap-3">
-                    <Badge variant="secondary" className="text-lg bg-accent text-accent-foreground">🏆</Badge>
+                    <Badge variant="secondary" className="text-lg bg-accent text-accent-foreground"><UserCheck className="h-5 w-5"/></Badge>
                     <div className="flex-1">
                       <p className="font-semibold text-xl">{winner.name}</p>
                     </div>
@@ -86,7 +86,7 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
               )}
             </div>
             <DialogFooter>
-              <Button onClick={handleRunRaffle} variant="outline"><RotateCw className="mr-2 h-4 w-4" /> Realizar de nuevo</Button>
+              <Button onClick={handleRunRaffle} variant="outline"><RotateCw className="mr-2 h-4 w-4" /> Seleccionar de nuevo</Button>
             </DialogFooter>
           </div>
         );
@@ -95,7 +95,7 @@ export function RaffleDialog({ list, addRaffleToHistory }: RaffleDialogProps) {
          return (
           <div className="py-8 text-center">
             <Dices className="mx-auto h-16 w-16 text-primary" />
-            <p className="mt-4 text-lg font-medium">Preparando sorteo...</p>
+            <p className="mt-4 text-lg font-medium">Preparando selección...</p>
           </div>
         );
     }

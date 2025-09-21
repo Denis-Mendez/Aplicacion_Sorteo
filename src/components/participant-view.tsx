@@ -53,7 +53,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
     const name = formData.get('name') as string;
 
     if (!name.trim()) {
-      toast({ title: "Error", description: "El nombre del participante es obligatorio.", variant: 'destructive' });
+      toast({ title: "Error", description: "El nombre del operario es obligatorio.", variant: 'destructive' });
       return;
     }
 
@@ -87,7 +87,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
       const newParticipantsData = await importFromCSV(file);
       const newParticipants: Participant[] = newParticipantsData.map(p => ({ ...p, id: `p-${Date.now()}-${Math.random()}` }));
       updateList({ ...list, participants: [...list.participants, ...newParticipants] });
-      toast({ title: "Éxito", description: `${newParticipants.length} participantes importados.` });
+      toast({ title: "Éxito", description: `${newParticipants.length} operarios importados.` });
     } catch (error) {
       toast({ title: "Error de Importación", description: (error as Error).message, variant: 'destructive' });
     }
@@ -114,7 +114,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
                 <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                 <AlertDialogDescription>
                   Esta acción no se puede deshacer. Esto eliminará permanentemente la lista
-                  "{list.name}" y todos sus participantes.
+                  "{list.name}" y todos sus operarios.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -128,7 +128,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
 
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <Button onClick={() => openParticipantDialog(null)}>
-          <UserPlus className="mr-2 h-4 w-4" /> Añadir Participante
+          <UserPlus className="mr-2 h-4 w-4" /> Añadir Operario
         </Button>
         <input type="file" accept=".csv" ref={fileInputRef} onChange={handleImport} className="hidden" />
         <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
@@ -171,7 +171,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
               ) : (
                 <TableRow>
                   <TableCell colSpan={2} className="h-24 text-center text-muted-foreground">
-                    Aún no hay participantes. Añade uno para empezar.
+                    Aún no hay operarios. Añade uno para empezar.
                   </TableCell>
                 </TableRow>
               )}
@@ -183,7 +183,7 @@ export function ParticipantView({ list, updateList, deleteList, addRaffleToHisto
       <Dialog open={isParticipantDialogOpen} onOpenChange={setIsParticipantDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingParticipant ? 'Editar' : 'Añadir'} Participante</DialogTitle>
+            <DialogTitle>{editingParticipant ? 'Editar' : 'Añadir'} Operario</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSaveParticipant}>
             <div className="grid gap-4 py-4">
