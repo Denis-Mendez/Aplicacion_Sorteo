@@ -1,0 +1,16 @@
+{
+  "name": "RaffleFlow",
+  "short_name": "RaffleFlow",
+  "description": "Create and manage raffles with ease.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3F0F7",
+  "theme_color": "#79558B",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
